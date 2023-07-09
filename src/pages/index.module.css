@@ -13,8 +13,7 @@
   height: 640px;
   background-color: darkgreen;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: wrap;
 }
 
 .cell {
