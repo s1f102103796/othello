@@ -29,30 +29,45 @@ const Home = () => {
 
     const canPlaceStone = false;
 
-    if (board[y + 1] !== undefined && board[y + 1][x] === 3 - turnColor) {
+    if (
+      board[y + 1] !== undefined &&
+      board[y + 1][x] === 3 - turnColor &&
+      board[y + 2][x] === turnColor
+    ) {
       newBoard[y][x] = turnColor;
+      newBoard[y + 1][x] = turnColor;
       setTurnColor(3 - turnColor);
-    } else if (board[y - 1] !== undefined && board[y - 1][x] === 3 - turnColor) {
+    } else if (
+      board[y - 1] !== undefined &&
+      board[y - 1][x] === 3 - turnColor &&
+      board[y - 2][x] === turnColor
+    ) {
       newBoard[y][x] = turnColor;
+      newBoard[y - 1][x] = turnColor;
       setTurnColor(3 - turnColor);
-    } else if (board[x + 1] !== undefined && board[y][x + 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
-    } else if (board[x - 1] !== undefined && board[y][x - 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
-    } else if (board[y + 1] !== undefined && board[y + 1][x + 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
-    } else if (board[y - 1] !== undefined && board[y + 1][x - 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
-    } else if (board[x + 1] !== undefined && board[y - 1][x + 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
-    } else if (board[x - 1] !== undefined && board[y - 1][x - 1] === 3 - turnColor) {
-      newBoard[y][x] = turnColor;
-      setTurnColor(3 - turnColor);
+      // } else if (
+      //   board[x + 1] !== undefined &&
+      //   board[y][x + 1] === 3 - turnColor &&
+      //   board[y][x + 2] === turnColor
+      // ) {
+      //   newBoard[y][x] = turnColor;
+      //   newBoard[y][x + 1] = turnColor;
+      //   setTurnColor(3 - turnColor);
+      // } else if (board[x - 1] !== undefined && board[y][x - 1] === 3 - turnColor) {
+      //   newBoard[y][x] = turnColor;
+      //   setTurnColor(3 - turnColor);
+      // } else if (board[y + 1] !== undefined && board[y + 1][x + 1] === 3 - turnColor) {
+      //   newBoard[y][x] = turnColor;
+      //   setTurnColor(3 - turnColor);
+      // } else if (board[y + 1] !== undefined && board[y + 1][x - 1] === 3 - turnColor) {
+      //   newBoard[y][x] = turnColor;
+      //   setTurnColor(3 - turnColor);
+      // } else if (board[y - 1] !== undefined && board[y - 1][x + 1] === 3 - turnColor) {
+      //   newBoard[y][x] = turnColor;
+      //   setTurnColor(3 - turnColor);
+      // } else if (board[y - 1] !== undefined && board[y - 1][x - 1] === 3 - turnColor) {
+      //   newBoard[y][x] = turnColor;
+      //   setTurnColor(3 - turnColor);
     }
     setBoard(newBoard);
   };
