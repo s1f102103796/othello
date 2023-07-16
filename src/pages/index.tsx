@@ -6,10 +6,10 @@ const Home = () => {
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 2, 0, 0, 0],
-    [0, 0, 0, 2, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 2, 2, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
@@ -28,11 +28,12 @@ const Home = () => {
     ];
 
     const canPlaceStone = false;
+    //const nextMoves = [];
 
     for (let i = 0; i < 8; i++) {
       const dx = directions[i][0];
       const dy = directions[i][1];
-      console.log(dx, dy);
+      //console.log(dx, dy);
 
       if (
         board[y + dy] !== undefined &&
@@ -48,80 +49,31 @@ const Home = () => {
             for (let j = 0; j < i; j++) {
               newBoard[y + j * dy][x + j * dx] = turnColor;
             }
+
             setTurnColor(3 - turnColor);
+            // newBoard[y - i + 1][x - i + 1] = 3;
             break;
           }
         }
       }
-
-      // if (
-      //   board[y + 1] !== undefined &&
-      //   board[x + 0] !== undefined &&
-      //   board[y + 1][x] === 3 - turnColor
-      // ) {
-      //   for (let i = 2; i < 8; i++) {
-      //     if (board[y + i] !== undefined && board[y + i][x] === turnColor) {
-      //       for (let j = 0; j < i; j++) {
-      //         newBoard[y + j][x] = turnColor;
-      //       }
-      //       setTurnColor(3 - turnColor);
-      //       break;
-      //     }
-      //   }
-      // }
-      // if (board[y - 1] !== undefined && board[y - 1][x] === 3 - turnColor) {
-      //   for (let i = 2; i < 8; i++) {
-      //     if (board[y - i] !== undefined && board[y - i][x] === turnColor) {
-      //       for (let j = 0; j < i; j++) {
-      //         newBoard[y - j][x] = turnColor;
-      //       }
-      //       setTurnColor(3 - turnColor);
-      //       break;
-      //     }
-      //   }
-      // }
-      // if (board[x + 1] !== undefined && board[y][x + 1] === 3 - turnColor) {
-      //   for (let i = 2; i < 8; i++) {
-      //     if (board[x + i] !== undefined && board[y][x + i] === turnColor) {
-      //       for (let j = 0; j < i; j++) {
-      //         newBoard[y][x + j] = turnColor;
-      //       }
-      //       setTurnColor(3 - turnColor);
-      //       break;
-      //     }
-      //   }
-      // }
-      // if (board[x - 1] !== undefined && board[y][x - 1] === 3 - turnColor) {
-      //   for (let i = 2; i < 8; i++) {
-      //     if (board[x - i] !== undefined && board[y][x - i] === turnColor) {
-      //       for (let j = 0; j < i; j++) {
-      //         newBoard[y][x - j] = turnColor;
-      //       }
-      //       setTurnColor(3 - turnColor);
-      //       break;
-      //     }
-      //   }
-      //}
-      // if (board[y + 1] !== undefined && board[y + 1][x + 1] === 3 - turnColor) {
-      //   for (let i = 2; i < 8; i++) {
-      //     if (board[y + i] !== undefined && board[y + i][x + i] === turnColor) {
-      //       for (let j = 0; j < i; j++) {
-      //         newBoard[y + j][x + j] = turnColor;
-      //       }
-      //       setTurnColor(3 - turnColor);
-      //       break;
-      //     }
-      //   }
-      // } else if (board[y + 1] !== undefined && board[y + 1][x - 1] === 3 - turnColor) {
-      //   newBoard[y][x] = turnColor;
-      //   setTurnColor(3 - turnColor);
-      // } else if (board[y - 1] !== undefined && board[y - 1][x + 1] === 3 - turnColor) {
-      //   newBoard[y][x] = turnColor;
-      //   setTurnColor(3 - turnColor);
-      // } else if (board[y - 1] !== undefined && board[y - 1][x - 1] === 3 - turnColor) {
-      //   newBoard[y][x] = turnColor;
-      //   setTurnColor(3 - turnColor);
     }
+
+    for (let py = 0; py < 8; py++) {
+      for (let px = 0; px < 8; px++) {
+        const color = newBoard[py][px];
+        //console.log(px, py, color);s
+        if (color === 0) {
+          if (newBoard[py + 1] !== undefined && newBoard[py + 1][px] === turnColor) {
+            for (let i = 2; i < 7; i++) {
+              if (newBoard[py + 3][px] === 3 - turnColor) {
+                newBoard[py][px] = 3;
+              }
+            }
+          }
+        }
+      }
+    }
+
     setBoard(newBoard);
   };
   return (
@@ -133,7 +85,7 @@ const Home = () => {
               {color !== 0 && (
                 <div
                   className={styles.stone}
-                  style={{ background: color === 1 ? '#000' : '#fff' }}
+                  style={{ background: color === 1 ? '#000' : color === 3 ? '#ffff00' : '#fff' }}
                 />
               )}
             </div>
