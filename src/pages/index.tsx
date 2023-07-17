@@ -13,9 +13,14 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  const [errorMessage, setErrorMessage] = useState('');
   //黒と白の点を計算、useStateの外でやる
   const onClick = (x: number, y: number) => {
     //console.log(x, y);
+    if (board[y][x] === 0) {
+      setErrorMessage('⚠️そこには置けないよ！');
+      return;
+    }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
     const directions = [
       [0, -1],
@@ -97,41 +102,8 @@ const Home = () => {
         }
       }
     }
-
-    //     if (color === 0) {
-    //       if (newBoard[py + 1] !== undefined && newBoard[py + 1][px] === turnColor) {
-    //         for (let k = 2; k < 7; k++) {
-    //           if (newBoard[py + k] !== undefined && newBoard[py + k][px] === 3 - turnColor) {
-    //             newBoard[py][px] = 3;
-    //           }
-    //         }
-    //       }
-    //       if (newBoard[py - 1] !== undefined && newBoard[py - 1][px] === turnColor) {
-    //         for (let k = 2; k < 7; k++) {
-    //           if (newBoard[py - k] !== undefined && newBoard[py - k][px] === 3 - turnColor) {
-    //             newBoard[py][px] = 3;
-    //           }
-    //         }
-    //       }
-    //       if (newBoard[px - 1] !== undefined && newBoard[py][px - 1] === turnColor) {
-    //         for (let k = 2; k < 7; k++) {
-    //           if (newBoard[px - k] !== undefined && newBoard[py][px - k] === 3 - turnColor) {
-    //             newBoard[py][px] = 3;
-    //           }
-    //         }
-    //       }
-    //       if (newBoard[px + 1] !== undefined && newBoard[py][px + 1] === turnColor) {
-    //         for (let k = 2; k < 7; k++) {
-    //           if (newBoard[px + k] !== undefined && newBoard[py][px + k] === 3 - turnColor) {
-    //             newBoard[py][px] = 3;
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-
     setBoard(newBoard);
+    setErrorMessage('');
   };
   return (
     <div className={styles.container}>
@@ -149,6 +121,7 @@ const Home = () => {
           ))
         )}
       </div>
+      {errorMessage && <p>{errorMessage}</p>}
     </div>
   );
 };
