@@ -31,3 +31,13 @@
   background-color: white;
   margin: 7px;
 }
+
+.score {
+  background-color: rgb(250 184 71);
+  width: 640px;
+  padding: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: black;
+}

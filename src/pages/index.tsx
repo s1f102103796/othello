@@ -14,11 +14,30 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
   const [errorMessage, setErrorMessage] = useState('');
+
   //黒と白の点を計算、useStateの外でやる
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const countStones = (board: number[][]) => {
+    let count1 = 0;
+    let count2 = 0;
+    for (let py = 0; py < 8; py++) {
+      for (let px = 0; px < 8; px++) {
+        if (board[py][px] === 1) {
+          count1++;
+        } else if (board[py][px] === 2) {
+          count2++;
+        }
+      }
+    }
+    return [count1, count2];
+  };
+  //const [count1, count2] = countStones(board);
+
   const onClick = (x: number, y: number) => {
     //console.log(x, y);
     if (board[y][x] === 0) {
-      setErrorMessage('⚠️そこには置けないよ！');
+      setErrorMessage('⚠️ERROR!');
       return;
     }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
@@ -104,6 +123,10 @@ const Home = () => {
     }
     setBoard(newBoard);
     setErrorMessage('');
+
+    const [newCount1, newCount2] = countStones(newBoard);
+    setCount1(newCount1);
+    setCount2(newCount2);
   };
   return (
     <div className={styles.container}>
@@ -114,7 +137,10 @@ const Home = () => {
               {color !== 0 && (
                 <div
                   className={styles.stone}
-                  style={{ background: color === 1 ? '#000' : color === 3 ? '#ffff00' : '#fff' }}
+                  style={{
+                    background:
+                      color === 1 ? '#000' : color === 2 ? '#fff' : color === 3 ? '#ffff00' : '',
+                  }}
                 />
               )}
             </div>
@@ -122,6 +148,10 @@ const Home = () => {
         )}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
+      <div className={styles.score}>
+        <h3>黒: {count1} stones</h3>
+        <h3>白: {count2} stones</h3>
+      </div>
     </div>
   );
 };
