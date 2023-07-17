@@ -16,8 +16,8 @@ const Home = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   //黒と白の点を計算、useStateの外でやる
-  const [count1, setCount1] = useState(0);
-  const [count2, setCount2] = useState(0);
+  const [count1, setCount1] = useState(2);
+  const [count2, setCount2] = useState(2);
   const countStones = (board: number[][]) => {
     let count1 = 0;
     let count2 = 0;
