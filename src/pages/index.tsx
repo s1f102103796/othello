@@ -32,7 +32,6 @@ const Home = () => {
     }
     return [count1, count2];
   };
-  //const [count1, count2] = countStones(board);
 
   const onClick = (x: number, y: number) => {
     //console.log(x, y);
@@ -148,6 +147,7 @@ const Home = () => {
         )}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
+      <h3>{turnColor === 1 ? '黒の番' : '白の番'}</h3>
       <div className={styles.score}>
         <h3>黒: {count1} stones</h3>
         <h3>白: {count2} stones</h3>
