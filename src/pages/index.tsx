@@ -101,14 +101,18 @@ const Home = () => {
               newBoard[px + dx] !== undefined &&
               newBoard[py + dy][px + dx] === turnColor
             ) {
-              for (let k = 1; k < 7; k++) {
+              for (let k = 1; k < 8; k++) {
                 if (
                   newBoard[py + k * dy] !== undefined &&
                   newBoard[px + k * dx] !== undefined &&
                   newBoard[py + k * dy][px + k * dx] === 3 - turnColor
                 ) {
-                  newBoard[py][px] = 3;
-                  cnt++;
+                  if (newBoard[py + k * dy][px + k * dx] !== 3) {
+                    newBoard[py][px] = 0;
+                  } else {
+                    newBoard[py][px] = 3;
+                    cnt++;
+                  }
                 }
               }
             }
