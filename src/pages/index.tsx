@@ -87,10 +87,13 @@ const Home = () => {
         const color = newBoard[py][px];
         let cnt = 0;
         let pass = 0;
+
         if (color === 3) {
           newBoard[py][px] = 0;
         }
+
         //console.log(px, py, color);
+
         for (let s = 0; s < 8; s++) {
           const dx = directions[s][0];
           const dy = directions[s][1];
@@ -101,32 +104,34 @@ const Home = () => {
               newBoard[px + dx] !== undefined &&
               newBoard[py + dy][px + dx] === turnColor
             ) {
-              for (let k = 1; k < 8; k++) {
-                if (
-                  newBoard[py + k * dy] !== undefined &&
-                  newBoard[px + k * dx] !== undefined &&
-                  newBoard[py + k * dy][px + k * dx] === 3 - turnColor
-                ) {
-                  if (
-                    newBoard[py + k * dy][px + k * dx] === 3 &&
-                    newBoard[py + k * dy][px + k * dx] === 0
-                  ) {
-                    newBoard[py][px] = 0;
-                  } else {
-                    newBoard[py][px] = 3;
-                    cnt++;
-                  }
+              let foundOwnColor = false;
+              let k = 1;
+              while (py + k * dy >= 0 && py + k * dy < 8 && px + k * dx >= 0 && px + k * dx < 8) {
+                const nextCellColor = newBoard[py + k * dy][px + k * dx];
+                if (nextCellColor === 3 - turnColor) {
+                  foundOwnColor = true;
+                  break;
+                } else if (nextCellColor === 0 || nextCellColor === 3) {
+                  break;
                 }
+                k++;
+              }
+
+              if (foundOwnColor) {
+                newBoard[py][px] = 3;
+                cnt++;
               }
             }
           }
         }
+
         if (cnt === 0) {
           setTurnColor(3 - turnColor);
           pass++;
         }
       }
     }
+
     setBoard(newBoard);
     setErrorMessage('');
 
@@ -154,7 +159,7 @@ const Home = () => {
         )}
       </div>
       {errorMessage && <p>{errorMessage}</p>}
-      <h3>{turnColor === 1 ? '黒の番' : '白の番'}</h3>
+      {/* <h3>{turnColor === 1 ? '黒の番' : '白の番'}</h3> */}
       <div className={styles.score}>
         <h3>黒: {count1} stones</h3>
         <h3>白: {count2} stones</h3>
