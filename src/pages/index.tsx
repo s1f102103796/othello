@@ -34,12 +34,22 @@ const Home = () => {
   };
 
   const onClick = (x: number, y: number) => {
-    //console.log(x, y);
-    // if (board[y][x] === 0) {
-    //   setErrorMessage('⚠️ERROR!');
-    //   return;
-    // }
+    console.log(x, y);
+    if (board[y][x] === 0) {
+      setErrorMessage('⚠️ERROR!');
+      return;
+    }
     const newBoard: number[][] = JSON.parse(JSON.stringify(board));
+
+    for (let qy = 0; qy < 8; qy++) {
+      for (let qx = 0; qx < 8; qx++) {
+        const color = newBoard[qy][qx];
+        if (color === 3) {
+          newBoard[qy][qx] = 0;
+        }
+      }
+    }
+    const readBoard: number[][] = JSON.parse(JSON.stringify(newBoard));
     const directions = [
       [0, -1],
       [0, 1],
@@ -50,190 +60,65 @@ const Home = () => {
       [-1, -1],
       [-1, 1],
     ];
+    let isPlace = false;
 
     for (let s = 0; s < 8; s++) {
       const dx = directions[s][0];
       const dy = directions[s][1];
       console.log(dx, dy);
 
-      if (
-        board[y + dy] !== undefined &&
-        board[x + dx] !== undefined &&
-        board[y + dy][x + dx] === 3 - turnColor
-      ) {
-        for (let i = 2; i < 8; i++) {
-          if (
-            board[y + i * dy] !== undefined &&
-            board[x + i * dx] !== undefined &&
-            board[y + i * dy][x + i * dx] === turnColor
-          ) {
-            for (let j = 0; j < i; j++) {
-              newBoard[y + j * dy][x + j * dx] = turnColor;
+      if (readBoard[y][x] === 0) {
+        if (readBoard[y + dy] !== undefined && readBoard[y + dy][x + dx] === 3 - turnColor) {
+          for (let i = 2; i < 8; i++) {
+            if (readBoard[y + i * dy] !== undefined) {
+              if (readBoard[y + i * dy][x + i * dx] === turnColor) {
+                for (let j = 0; j < i; j++) {
+                  newBoard[y + j * dy][x + j * dx] = turnColor;
+                }
+                setTurnColor(3 - turnColor);
+                isPlace = true;
+              }
+              if (readBoard[y + i * dy][x + i * dx] === 3 - turnColor) {
+                continue;
+              }
             }
 
-            setTurnColor(3 - turnColor);
             break;
           }
+          console.log(x, y);
         }
-        console.log(x, y);
       }
     }
 
-    const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
-    for (let py = 0; py < 8; py++) {
-      for (let px = 0; px < 8; px++) {
-        const color = boardWithCondidate[py][px];
-        if (color === 3) {
-          boardWithCondidate[py][px] = 0;
-        }
-        for (let s = 0; s < 8; s++) {
-          const dx = directions[s][0];
-          const dy = directions[s][1];
+    if (isPlace) {
+      const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
+      for (let py = 0; py < 8; py++) {
+        for (let px = 0; px < 8; px++) {
+          for (let s = 0; s < 8; s++) {
+            const dx = directions[s][0];
+            const dy = directions[s][1];
 
-          if (boardWithCondidate[py][px] === 0) {
-            if (
-              newBoard[py + dy] !== undefined &&
-              newBoard[px + dx] !== undefined &&
-              newBoard[py + dy][px + dx] === turnColor
-            ) {
-              for (let k = 1; k < 8; k++) {
-                if (
-                  newBoard[py + k * dy] !== undefined &&
-                  newBoard[px + k * dx] !== undefined &&
-                  newBoard[py + k * dy][px + k * dx] === 3 - turnColor
-                ) {
-                  boardWithCondidate[py][px] = 3;
+            if (boardWithCondidate[py][px] === 0) {
+              if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
+                for (let k = 1; k < 8; k++) {
+                  if (newBoard[py + k * dy] !== undefined) {
+                    if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
+                      boardWithCondidate[py][px] = 3;
+                    }
+                    if (newBoard[py + k * dy][px + k * dx] === turnColor) {
+                      continue;
+                    }
+                  }
+                  break;
                 }
               }
             }
           }
         }
-        // for (let k = 1; k < 8; k++) {
-        //   if (boardWithCondidate[py][px] === 0) {
-        //     if (newBoard[py + 1] !== undefined && newBoard[py + 1][px] === turnColor) {
-        //       if (newBoard[py + k] !== undefined && newBoard[py + k][px] === 3 - turnColor) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (newBoard[py - 1] !== undefined && newBoard[py - 1][px] === turnColor) {
-        //       if (newBoard[py - k] !== undefined && newBoard[py - k][px] === 3 - turnColor) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (newBoard[px + 1] !== undefined && newBoard[py][px + 1] === turnColor) {
-        //       if (newBoard[px + k] !== undefined && newBoard[py][px + k] === 3 - turnColor) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (newBoard[px - 1] !== undefined && newBoard[py][px - 1] === turnColor) {
-        //       if (newBoard[px - k] !== undefined && newBoard[py][px - k] === 3 - turnColor) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (
-        //       newBoard[py + 1] !== undefined &&
-        //       newBoard[px + 1] !== undefined &&
-        //       newBoard[py + 1][px + 1] === turnColor
-        //     ) {
-        //       if (
-        //         newBoard[py + k] !== undefined &&
-        //         newBoard[px + k] !== undefined &&
-        //         newBoard[py + k][px + k] === 3 - turnColor
-        //       ) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (
-        //       newBoard[py - 1] !== undefined &&
-        //       newBoard[px - 1] !== undefined &&
-        //       newBoard[py - 1][px - 1] === turnColor
-        //     ) {
-        //       if (
-        //         newBoard[py - k] !== undefined &&
-        //         newBoard[px - k] !== undefined &&
-        //         newBoard[py - k][px - k] === 3 - turnColor
-        //       ) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (
-        //       newBoard[py - 1] !== undefined &&
-        //       newBoard[px + 1] !== undefined &&
-        //       newBoard[py - 1][px + 1] === turnColor
-        //     ) {
-        //       if (
-        //         newBoard[py - k] !== undefined &&
-        //         newBoard[px + k] !== undefined &&
-        //         newBoard[py - k][px + k] === 3 - turnColor
-        //       ) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //     if (
-        //       newBoard[py + 1] !== undefined &&
-        //       newBoard[px - 1] !== undefined &&
-        //       newBoard[py + 1][px - 1] === turnColor
-        //     ) {
-        //       if (
-        //         newBoard[py + k] !== undefined &&
-        //         newBoard[px - k] !== undefined &&
-        //         newBoard[py + k][px - k] === 3 - turnColor
-        //       ) {
-        //         boardWithCondidate[py][px] = 3;
-        //       }
-        //     }
-        //   }
-        // }
       }
+      setBoard(boardWithCondidate);
     }
-    // for (let py = 0; py < 8; py++) {
-    //   for (let px = 0; px < 8; px++) {
-    //     const color = boardWithCondidate[py][px];
 
-    //     if (color === 3) {
-    //       boardWithCondidate[py][px] = 0;
-    //     }
-    //     //console.log(111, px, py, color);
-    //     for (let s = 0; s < 8; s++) {
-    //       const dx = directions[s][0];
-    //       const dy = directions[s][1];
-    //       if (color === 0) {
-    //         if (
-    //           boardWithCondidate[py + dy] !== undefined &&
-    //           boardWithCondidate[px + dx] !== undefined &&
-    //           boardWithCondidate[py + dy][px + dx] === turnColor
-    //         ) {
-    //           for (let k = 1; k < 8; k++) {
-    //             if (
-    //               boardWithCondidate[py + k * dy] !== undefined &&
-    //               boardWithCondidate[px + k * dx] !== undefined &&
-    //               boardWithCondidate[py + k * dy][px + k * dx] === 3 - turnColor
-    //             ) {
-    //               if (boardWithCondidate[py + k * dy][px + k * dx] !== 3) {
-    //                 if (
-    //                   boardWithCondidate[py + k * dy][px + k * dx] === 3 &&
-    //                   boardWithCondidate[py + k * dy][px + k * dx] === 0
-    //                 ) {
-    //                   boardWithCondidate[py][px] = 0;
-    //                 } else {
-    //                   boardWithCondidate[py][px] = 3;
-    //                 }
-    //               }
-    //             }
-    //           }
-    //           //console.log(222, px, py, color);
-    //         }
-    //       }
-    //       // if (cnt === 0) {
-    //       setTurnColor(3 - turnColor);
-
-    //       //}
-    //     }
-    //     //console.log(222, px, py, color);
-    //   }
-    // }
-
-    setBoard(boardWithCondidate);
     setErrorMessage('');
 
     const [newCount1, newCount2] = countStones(newBoard);
