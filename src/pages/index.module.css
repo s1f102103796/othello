@@ -14,8 +14,6 @@
   background-color: darkgreen;
   display: flex;
   flex-flow: wrap;
-
-  /* margin-right: 700px; */
 }
 
 .cell {
@@ -42,6 +40,4 @@
   display: flex;
   justify-content: space-between;
   color: black;
-
-  /* margin-left: 700px; */
 }
