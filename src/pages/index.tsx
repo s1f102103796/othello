@@ -6,12 +6,12 @@ const Home = () => {
   const [board, setBoard] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 3, 0, 0, 0],
-    [0, 0, 0, 1, 2, 3, 0, 0],
-    [0, 0, 3, 1, 1, 0, 0, 0],
-    [0, 0, 0, 3, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [3, 0, 0, 0, 0, 0, 0, 3],
+    [2, 0, 0, 0, 0, 0, 0, 2],
+    [1, 0, 0, 0, 0, 0, 0, 1],
   ]);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -110,11 +110,6 @@ const Home = () => {
                     if (newBoard[py + k * dy][px + k * dx] === turnColor) {
                       continue;
                     }
-                    if (cnt === 0) {
-                      setTurnColor(3 - turnColor);
-                      setErrorMessage('PASS!');
-                      return;
-                    }
                   }
                   break;
                 }
@@ -124,6 +119,11 @@ const Home = () => {
         }
       }
       setBoard(boardWithCondidate);
+      if (cnt === 0) {
+        setTurnColor(3 - turnColor);
+        setErrorMessage('PASS!');
+        return;
+      }
     }
 
     setErrorMessage('');
