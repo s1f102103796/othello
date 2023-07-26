@@ -8,7 +8,7 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 3, 0, 0, 0],
     [0, 0, 0, 1, 2, 3, 0, 0],
-    [0, 0, 3, 2, 1, 0, 0, 0],
+    [0, 0, 3, 1, 1, 0, 0, 0],
     [0, 0, 0, 3, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -61,6 +61,7 @@ const Home = () => {
       [-1, 1],
     ];
     let isPlace = false;
+    let cnt = 0;
 
     for (let s = 0; s < 8; s++) {
       const dx = directions[s][0];
@@ -104,9 +105,15 @@ const Home = () => {
                   if (newBoard[py + k * dy] !== undefined) {
                     if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
                       boardWithCondidate[py][px] = 3;
+                      cnt++;
                     }
                     if (newBoard[py + k * dy][px + k * dx] === turnColor) {
                       continue;
+                    }
+                    if (cnt === 0) {
+                      setTurnColor(3 - turnColor);
+                      setErrorMessage('PASS!');
+                      return;
                     }
                   }
                   break;
