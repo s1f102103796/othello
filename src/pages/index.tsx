@@ -62,6 +62,7 @@ const Home = () => {
     ];
     let isPlace = false;
     let cnt = 0;
+    let pass = 0;
 
     for (let s = 0; s < 8; s++) {
       const dx = directions[s][0];
@@ -122,6 +123,7 @@ const Home = () => {
       if (cnt === 0) {
         setTurnColor(3 - turnColor);
         setErrorMessage('PASS!');
+        pass++;
         return;
       }
     }
