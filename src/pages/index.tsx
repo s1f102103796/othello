@@ -126,6 +126,10 @@ const Home = () => {
         pass++;
         return;
       }
+      if (pass === 2) {
+        setErrorMessage('END');
+        return;
+      }
     }
 
     setErrorMessage('');
