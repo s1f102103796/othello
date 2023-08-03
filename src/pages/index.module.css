@@ -1,11 +1,17 @@
 .container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 120vh;
   min-height: 100vh;
   padding: 0 0.5rem;
+  flex-direction: row;
+}
+
+.boardContainer {
+  display: flex;
+  align-items: center; /* 盤面とボタンを縦方向に中央揃え */
+  flex-direction: column;
 }
 
 .board {
@@ -40,4 +46,11 @@
   display: flex;
   justify-content: space-between;
   color: black;
+}
+
+.resetbutton {
+  width: 100px;
+  height: 40px;
+  margin-left: 20px;
+  margin-top: 10px;
 }
