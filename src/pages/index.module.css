@@ -8,11 +8,12 @@
   flex-direction: row;
 }
 
-.boardContainer {
+/* .boardContainer {
   display: flex;
   align-items: center; /* 盤面とボタンを縦方向に中央揃え */
-  flex-direction: column;
-}
+
+/* flex-direction: column;
+} */
 
 .board {
   width: 640px;
