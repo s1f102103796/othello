@@ -22,6 +22,27 @@ const Home = () => {
     // [0, 0, 0, 0, 0, 0, 0, 0],
     // [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+
+  const newBoard: number[][] = JSON.parse(JSON.stringify(board));
+  for (let qy = 0; qy < 8; qy++) {
+    for (let qx = 0; qx < 8; qx++) {
+      const color = newBoard[qy][qx];
+      if (color === 3) {
+        newBoard[qy][qx] = 0;
+      }
+    }
+  }
+  const readBoard: number[][] = JSON.parse(JSON.stringify(newBoard));
+  const directions = [
+    [0, -1],
+    [0, 1],
+    [-1, 0],
+    [1, 0],
+    [1, -1],
+    [1, 1],
+    [-1, -1],
+    [-1, 1],
+  ];
   const [errorMessage, setErrorMessage] = useState('');
   const [passCount, setPassCount] = useState(0);
   //黒と白の点を計算、useStateの外でやる
@@ -44,7 +65,39 @@ const Home = () => {
   };
 
   let isPlace = false;
+  let cnt = 0;
+  const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
+  if (isPlace) {
+    for (let py = 0; py < 8; py++) {
+      for (let px = 0; px < 8; px++) {
+        for (let s = 0; s < 8; s++) {
+          const dx = directions[s][0];
+          const dy = directions[s][1];
+          // 石の数を更新
+          const [newCount1, newCount2] = countStones(boardWithCondidate);
+          setCount1(newCount1);
+          setCount2(newCount2);
 
+          if (boardWithCondidate[py][px] === 0) {
+            if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
+              for (let k = 1; k < 8; k++) {
+                if (newBoard[py + k * dy] !== undefined) {
+                  if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
+                    boardWithCondidate[py][px] = 3;
+                    cnt++;
+                  }
+                  if (newBoard[py + k * dy][px + k * dx] === turnColor) {
+                    continue;
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   // const resetGame = () => {
   //   const resetBoard: number[][] = [
   //     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -68,29 +121,7 @@ const Home = () => {
     //   setErrorMessage('⚠️ERROR!');
     //   return;
     // }
-    let pass = 0;
-    const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-    for (let qy = 0; qy < 8; qy++) {
-      for (let qx = 0; qx < 8; qx++) {
-        const color = newBoard[qy][qx];
-        if (color === 3) {
-          newBoard[qy][qx] = 0;
-        }
-      }
-    }
-    const readBoard: number[][] = JSON.parse(JSON.stringify(newBoard));
-    const directions = [
-      [0, -1],
-      [0, 1],
-      [-1, 0],
-      [1, 0],
-      [1, -1],
-      [1, 1],
-      [-1, -1],
-      [-1, 1],
-    ];
-
-    let cnt = 0;
+    const pass = 0;
 
     for (let s = 0; s < 8; s++) {
       const dx = directions[s][0];
@@ -127,89 +158,20 @@ const Home = () => {
         }
       }
     }
+    // if (cnt === 0) {
+    //   console.log('pass');
+    //   setErrorMessage('PASS!');
+    //   setPassCount((prevPass) => prevPass + 1);
 
-    if (isPlace) {
-      const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
-      for (let py = 0; py < 8; py++) {
-        for (let px = 0; px < 8; px++) {
-          for (let s = 0; s < 8; s++) {
-            const dx = directions[s][0];
-            const dy = directions[s][1];
-            // 石の数を更新
-            const [newCount1, newCount2] = countStones(boardWithCondidate);
-            setCount1(newCount1);
-            setCount2(newCount2);
+    //   return;
+    // }
+    setBoard(boardWithCondidate);
+    setTurnColor(3 - turnColor);
 
-            if (boardWithCondidate[py][px] === 0) {
-              if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
-                for (let k = 1; k < 8; k++) {
-                  if (newBoard[py + k * dy] !== undefined) {
-                    if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
-                      boardWithCondidate[py][px] = 3;
-                      cnt++;
-                    }
-                    if (newBoard[py + k * dy][px + k * dx] === turnColor) {
-                      continue;
-                    }
-                  }
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-      setBoard(boardWithCondidate);
-      if (cnt === 0) {
-        console.log('pass');
-        setErrorMessage('PASS!');
-        pass += 1;
-        setPassCount((prevPass) => prevPass + 1);
-        const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
-        for (let py = 0; py < 8; py++) {
-          for (let px = 0; px < 8; px++) {
-            for (let s = 0; s < 8; s++) {
-              const dx = directions[s][0];
-              const dy = directions[s][1];
-              // 石の数を更新
-              const [newCount1, newCount2] = countStones(boardWithCondidate);
-              setCount1(newCount1);
-              setCount2(newCount2);
-              console.log('1');
-              if (boardWithCondidate[py][px] === 0) {
-                console.log('2');
-                if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
-                  console.log('3');
-                  for (let k = 1; k < 8; k++) {
-                    if (newBoard[py + k * dy] !== undefined) {
-                      console.log('4');
-                      if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
-                        boardWithCondidate[py][px] = 3;
-                        console.log('kouho');
-                        cnt++;
-                        setTurnColor(turnColor);
-                      }
-                      if (newBoard[py + k * dy][px + k * dx] === turnColor) {
-                        continue;
-                      }
-                    }
-                    break;
-                  }
-                }
-              }
-            }
-          }
-        }
-        return;
-      }
-
-      setTurnColor(3 - turnColor);
-
-      // if (passCount === 2) {
-      //   setErrorMessage('END');
-      //   return;
-      // }
-    }
+    // if (passCount === 2) {
+    //   setErrorMessage('END');
+    //   return;
+    // }
 
     setErrorMessage('');
 
