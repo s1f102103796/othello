@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.css';
 
 const Home = () => {
@@ -15,39 +15,18 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0],
     // [0, 0, 0, 0, 0, 0, 0, 0],
     // [0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 0, 0, 0, 0, 0],
-    // [0, 0, 0, 1, 1, 0, 0, 0],
+    // [0, 0, 0, 0, 3, 0, 0, 0],
+    // [0, 0, 0, 1, 2, 3, 0, 0],
     // [0, 0, 3, 2, 1, 0, 0, 0],
-    // [0, 0, 3, 3, 0, 0, 0, 0],
+    // [0, 0, 0, 3, 0, 0, 0, 0],
     // [0, 0, 0, 0, 0, 0, 0, 0],
     // [0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-
-  const newBoard: number[][] = JSON.parse(JSON.stringify(board));
-  for (let qy = 0; qy < 8; qy++) {
-    for (let qx = 0; qx < 8; qx++) {
-      const color = newBoard[qy][qx];
-      if (color === 3) {
-        newBoard[qy][qx] = 0;
-      }
-    }
-  }
-  const readBoard: number[][] = JSON.parse(JSON.stringify(newBoard));
-  const directions = [
-    [0, -1],
-    [0, 1],
-    [-1, 0],
-    [1, 0],
-    [1, -1],
-    [1, 1],
-    [-1, -1],
-    [-1, 1],
-  ];
   const [errorMessage, setErrorMessage] = useState('');
   const [passCount, setPassCount] = useState(0);
   //黒と白の点を計算、useStateの外でやる
-  const [count1, setCount1] = useState(2);
-  const [count2, setCount2] = useState(2);
+  // const [count1, setCount1] = useState(2);
+  // const [count2, setCount2] = useState(2);
 
   const countStones = (board: number[][]) => {
     let count1 = 0;
@@ -64,40 +43,6 @@ const Home = () => {
     return [count1, count2];
   };
 
-  let isPlace = false;
-  let cnt = 0;
-  const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
-  if (isPlace) {
-    for (let py = 0; py < 8; py++) {
-      for (let px = 0; px < 8; px++) {
-        for (let s = 0; s < 8; s++) {
-          const dx = directions[s][0];
-          const dy = directions[s][1];
-          // 石の数を更新
-          const [newCount1, newCount2] = countStones(boardWithCondidate);
-          setCount1(newCount1);
-          setCount2(newCount2);
-
-          if (boardWithCondidate[py][px] === 0) {
-            if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
-              for (let k = 1; k < 8; k++) {
-                if (newBoard[py + k * dy] !== undefined) {
-                  if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
-                    boardWithCondidate[py][px] = 3;
-                    cnt++;
-                  }
-                  if (newBoard[py + k * dy][px + k * dx] === turnColor) {
-                    continue;
-                  }
-                }
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
   // const resetGame = () => {
   //   const resetBoard: number[][] = [
   //     [0, 0, 0, 0, 0, 0, 0, 0],
@@ -115,18 +60,48 @@ const Home = () => {
   //   setPassCount(0);
   // };
 
+  React.useEffect(() => {
+    // 2回連続でパスした場合はゲーム終了
+    if (passCount === 2) {
+      setErrorMessage('END');
+    }
+  }, [passCount, setErrorMessage, setTurnColor, turnColor]);
+
   const onClick = (x: number, y: number) => {
-    console.log(x, y);
+    //console.log('aaa', x, y);
     // if (board[y][x] === 0) {
     //   setErrorMessage('⚠️ERROR!');
     //   return;
     // }
     const pass = 0;
+    const newBoard: number[][] = JSON.parse(JSON.stringify(board));
+    for (let qy = 0; qy < 8; qy++) {
+      for (let qx = 0; qx < 8; qx++) {
+        const color = newBoard[qy][qx];
+        if (color === 3) {
+          newBoard[qy][qx] = 0;
+        }
+      }
+    }
+
+    const readBoard: number[][] = JSON.parse(JSON.stringify(newBoard));
+    const directions = [
+      [0, -1],
+      [0, 1],
+      [-1, 0],
+      [1, 0],
+      [1, -1],
+      [1, 1],
+      [-1, -1],
+      [-1, 1],
+    ];
+    let isPlace = false;
+    let cnt = 0;
 
     for (let s = 0; s < 8; s++) {
       const dx = directions[s][0];
       const dy = directions[s][1];
-      console.log(dx, dy);
+      //console.log('bbbb', dx, dy);
 
       // for (let qy = 0; qy < 8; qy++) {
       //   for (let qx = 0; qx < 8; qx++) {
@@ -154,31 +129,101 @@ const Home = () => {
 
             break;
           }
-          console.log(x, y);
+          console.log('aaa', x, y);
         }
       }
     }
-    // if (cnt === 0) {
-    //   console.log('pass');
-    //   setErrorMessage('PASS!');
-    //   setPassCount((prevPass) => prevPass + 1);
 
-    //   return;
-    // }
+    // ここからは石を置ける場合の処理
+    const boardWithCondidate: number[][] = JSON.parse(JSON.stringify(newBoard));
+    for (let py = 0; py < 8; py++) {
+      for (let px = 0; px < 8; px++) {
+        for (let s = 0; s < 8; s++) {
+          const dx = directions[s][0];
+          const dy = directions[s][1];
+          // 石の数を更新
+          const [newCount1, newCount2] = countStones(boardWithCondidate);
+          // setCount1(newCount1);
+          // setCount2(newCount2);
+
+          if (boardWithCondidate[py][px] === 0) {
+            if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === turnColor) {
+              for (let k = 1; k < 8; k++) {
+                if (newBoard[py + k * dy] !== undefined) {
+                  if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
+                    boardWithCondidate[py][px] = 3;
+                    cnt++;
+                  }
+                  if (newBoard[py + k * dy][px + k * dx] === turnColor) {
+                    continue;
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log('候補地の数:', cnt);
+    // const aboardWithCondidate: number[][] = JSON.parse(JSON.stringify(boardWithCondidate));
+
+    if (cnt === 0) {
+      console.log('pass');
+      setErrorMessage('PASS!');
+      // pass += 1;
+      // setPassCount((prevPass) => prevPass + 1);
+
+      if (passCount + 1 === 2) {
+        setErrorMessage('END');
+        setTurnColor(3 - turnColor); // パスでゲームが終了する場合、ターンを交代する
+      }
+      for (let py = 0; py < 8; py++) {
+        for (let px = 0; px < 8; px++) {
+          for (let s = 0; s < 8; s++) {
+            const dx = directions[s][0];
+            const dy = directions[s][1];
+            // 石の数を更新
+            const [newCount1, newCount2] = countStones(boardWithCondidate);
+            // setCount1(newCount1);
+            // setCount2(newCount2);
+
+            if (boardWithCondidate[py][px] === 0) {
+              if (newBoard[py + dy] !== undefined && newBoard[py + dy][px + dx] === 3 - turnColor) {
+                for (let k = 1; k < 8; k++) {
+                  if (newBoard[py + k * dy] !== undefined) {
+                    if (newBoard[py + k * dy][px + k * dx] === turnColor) {
+                      boardWithCondidate[py][px] = 3;
+                      cnt++;
+                    }
+                    if (newBoard[py + k * dy][px + k * dx] === 3 - turnColor) {
+                      continue;
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      setTurnColor(3 - turnColor);
+    }
+
     setBoard(boardWithCondidate);
-    setTurnColor(3 - turnColor);
 
-    // if (passCount === 2) {
-    //   setErrorMessage('END');
-    //   return;
-    // }
+    if (passCount === 2) {
+      setErrorMessage('END');
+      return;
+    }
 
     setErrorMessage('');
 
-    const [newCount1, newCount2] = countStones(newBoard);
-    setCount1(newCount1);
-    setCount2(newCount2);
+    // setCount1(newCount1);
+    // setCount2(newCount2);
   };
+  const [newCount1, newCount2] = countStones(board);
   return (
     <div className={styles.container}>
       <div className={styles.boardContainer}>
@@ -204,8 +249,8 @@ const Home = () => {
         <div className={styles.score}>
           {/* スコアの内容 */}
           <h3>{turnColor === 1 ? '黒の番' : '白の番'}</h3>
-          <h3>黒: {count1} stones</h3>
-          <h3>白: {count2} stones</h3>
+          <h3>黒: {newCount1} stones</h3>
+          <h3>白: {newCount2} stones</h3>
         </div>
         {/* <button className={styles['resetbutton']} onClick={resetGame}>
           Reset Game
